@@ -3,7 +3,6 @@ package com.ucareer.builder.user.web;
 import com.ucareer.builder.core.CoreResponseBody;
 import com.ucareer.builder.mail.MailService;
 import com.ucareer.builder.user.User;
-import com.ucareer.builder.user.UserRepository;
 import com.ucareer.builder.user.UserService;
 import com.ucareer.builder.user.enums.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,6 @@ public class UserController {
     UserService userService;
     @Autowired
     MailService mailService;
-
-    @Autowired
-    UserRepository userRepository;
-
     //localhsot:8080/api/hello
     @GetMapping("/hello")
     @CrossOrigin("http://localhost:4200")
