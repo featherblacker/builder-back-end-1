@@ -1,4 +1,4 @@
-package com.ucarrer.builder.user.requests;
+package com.ucareer.builder.user.requests;
 
 public class UpdateProfileRequest {
     private String username;

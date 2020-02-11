@@ -1,7 +1,7 @@
-package com.ucarrer.builder.landing.models;
+package com.ucareer.builder.landing.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ucarrer.restaurant.restaurantlandingpagebuilder.user.User;
+import com.ucareer.builder.user.User;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -47,17 +47,17 @@ public class Landing {
     @JoinColumn(name = "menu_id", referencedColumnName = "id")
     private Menu menu;
 
-    @OneToOne(mappedBy = "builder", cascade = {CascadeType.ALL})
-    @JsonIgnore
-    private User user;
+//    @OneToOne(mappedBy = "Landing", cascade = {CascadeType.ALL})
+//    @JsonIgnore
+//    private User user;
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     public Long getId() {
         return id;

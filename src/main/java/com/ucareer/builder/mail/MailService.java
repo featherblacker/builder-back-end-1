@@ -1,4 +1,4 @@
-package com.ucarrer.builder.mail;
+package com.ucareer.builder.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;

@@ -1,7 +1,21 @@
+package com.ucareer.builder.user.web;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ucareer.builder.core.CoreResponseBody;
+import com.ucareer.builder.landing.repos.GalleryRepository;
+import com.ucareer.builder.landing.repos.HeadRepository;
+import com.ucareer.builder.mail.MailService;
+import com.ucareer.builder.user.User;
+import com.ucareer.builder.user.UserRepository;
+import com.ucareer.builder.user.UserService;
+import com.ucareer.builder.user.enums.UserStatus;
+import com.ucareer.builder.user.requests.ResetPasswordRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@JsonInclude(JsonInclude.Include.NON_NULL)
-
 @RequestMapping("/api")
 public class UserController {
 
@@ -13,8 +27,8 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    BuilderRepository builderRepository;
+//    @Autowired
+//    BuilderRepository builderRepository;
 
     @Autowired
     GalleryRepository galleryRepository;
@@ -39,18 +53,18 @@ public class UserController {
         if (savedUser == null) {
             res = new CoreResponseBody(savedUser, "User already exist.", new Exception("User Already Exist."));
         } else {
-            try {
-                String token = userService.createToken(savedUser);
-                String body = String.format(
-                        "please click following link to confirm your username. <a href=\"%s/api/user/confirm/%s\">Email Confirmed</a>",
-                        "http://localhost:8080", token);
-//                String to, String subject, String text
-                this.mailService.sendSimpleMessage(savedUser.getUsername(), "Please confirm your email!", body);
-            } catch (MailException e) {
-                res = new CoreResponseBody(null, "email send failed", e);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
-            }
-            res = new CoreResponseBody(savedUser, "register succeed with state of inactive", null);
+            res = new CoreResponseBody(savedUser, "register succeed with state of active", null);
+//            try {
+//                String token = userService.createToken(savedUser);
+//                String body = String.format(
+//                        "please click following link to confirm your username. <a href=\"%s/api/user/confirm/%s\">Email Confirmed</a>",
+//                        "http://localhost:8080", token);
+//                this.mailService.sendSimpleMessage(savedUser.getUsername(), "Please confirm your email!", body);
+//            } catch (MailException e) {
+//                res = new CoreResponseBody(null, "email send failed", e);
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+//            }
+//            res = new CoreResponseBody(savedUser, "register succeed with state of inactive", null);
         }
         return ResponseEntity.ok(res);
     }
@@ -157,7 +171,7 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CoreResponseBody> passchange(
             @RequestHeader("Authorization") String authHeader,
-            @RequestBody PasswordCombination password) {
+            @RequestBody ResetPasswordRequest password) {
         String token = this.getJwtTokenFromHeader(authHeader);
         CoreResponseBody res = new CoreResponseBody(null, "invalid token", new Exception("invalid token"));
         if (token == "") {
@@ -174,7 +188,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }
 
-        User savedUser = userService.updateUserPassword(user, password.getCurrentPassword(), password.getNewPassword());
+        User savedUser = userService.updateUserPassword(user, password.getOldPassword(), password.getPassword());
         if (savedUser != null) {
             res = new CoreResponseBody(savedUser, "Password changed", null);
         } else {

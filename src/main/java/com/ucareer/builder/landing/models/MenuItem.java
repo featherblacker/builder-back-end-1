@@ -1,4 +1,4 @@
-package com.ucarrer.builder.landing.models;
+package com.ucareer.builder.landing.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

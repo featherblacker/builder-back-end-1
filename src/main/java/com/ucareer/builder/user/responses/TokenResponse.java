@@ -1,4 +1,4 @@
-package com.ucarrer.builder.user.responses;
+package com.ucareer.builder.user.responses;
 
 public class TokenResponse {
     private String token;

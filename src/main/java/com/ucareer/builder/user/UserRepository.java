@@ -1,4 +1,4 @@
-package com.ucarrer.builder.user;
+package com.ucareer.builder.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

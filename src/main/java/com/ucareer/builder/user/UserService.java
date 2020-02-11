@@ -1,6 +1,6 @@
-package com.ucarrer.builder.user;
+package com.ucareer.builder.user;
 
-import com.ucarrer.builder.user.enums.UserStatus;
+import com.ucareer.builder.user.enums.UserStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -1,4 +1,4 @@
-package com.ucarrer.builder.core;
+package com.ucareer.builder.core;
 
 public class CoreResponseBody<T> {
     private T result;

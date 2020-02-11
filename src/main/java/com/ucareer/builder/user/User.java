@@ -1,9 +1,10 @@
-package com.ucarrer.builder.user;
+package com.ucareer.builder.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ucarrer.restaurant.restaurantlandingpagebuilder.builder.Builder;
-import com.ucarrer.restaurant.restaurantlandingpagebuilder.user.enums.UserStatus;
+
+import com.ucareer.builder.landing.models.Landing;
+import com.ucareer.builder.user.enums.UserStatus;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -48,11 +49,11 @@ public class User {
     @UpdateTimestamp
     private Date modifiedAt;
 
-//
+
 //    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "builder_id")
+//    @JoinColumn(name = "landing_id")
 //    @JsonIgnore
-//    private Builder builder;
+//    private Landing landing;
 
     private String firstName;
     private String lastName;
@@ -135,14 +136,6 @@ public class User {
     public void setDescription(String description) {
         this.description = description;
     }
-//
-//    public Builder getBuilder() {
-//        return builder;
-//    }
-//
-//    public void setBuilder(Builder builder) {
-//        this.builder = builder;
-//    }
 
     public String getFirstName() {
         return firstName;
