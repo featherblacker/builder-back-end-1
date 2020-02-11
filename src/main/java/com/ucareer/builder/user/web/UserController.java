@@ -6,7 +6,6 @@ import com.ucareer.builder.user.User;
 import com.ucareer.builder.user.UserRepository;
 import com.ucareer.builder.user.UserService;
 import com.ucareer.builder.user.enums.UserStatus;
-import com.ucareer.builder.user.requests.ResetPasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,87 +102,6 @@ public class UserController {
         return ResponseEntity.ok(res);
     }
 
-    // go to profile page
-    @GetMapping("/me")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<CoreResponseBody> me(@RequestHeader("Authorization") String authHeader) {
-        String token = this.getJwtTokenFromHeader(authHeader);
-        CoreResponseBody res;
-        if (token == "") {
-            res = new CoreResponseBody(null, "invalid token", new Exception("invalid token"));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
-        }
-
-        User user = userService.getUserByToken(token);
-
-        if (user == null) {
-            res = new CoreResponseBody(null, "invalid token", new Exception("invalid token"));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
-        }
-        res = new CoreResponseBody(user, "get user by username", null);
-        return ResponseEntity.status(HttpStatus.OK).body(res);
-    }
-
-    // update user profile
-    @PostMapping("/me")
-    @CrossOrigin(origins = "http://localhost:4200")
-
-    public ResponseEntity<CoreResponseBody> me(
-            @RequestHeader("Authorization") String authHeader,
-            @RequestBody User user
-    ) {
-        String token = this.getJwtTokenFromHeader(authHeader);
-        CoreResponseBody res;
-        if (token == "") {
-            res = new CoreResponseBody(null, "invalid token", new Exception("invalid token"));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
-        }
-
-        User currUser = userService.getUserByToken(token);
-        if (user == null) {
-            res = new CoreResponseBody(null, "invalid token", new Exception("invalid token"));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
-        }
-
-        User savedUser = userService.updateUser(currUser, user);
-        if (savedUser != null) {
-            res = new CoreResponseBody(savedUser, "user profile updated", null);
-            return ResponseEntity.status(HttpStatus.OK).body(res);
-        }
-
-        res = new CoreResponseBody(null, "invalid user information", new Exception("invalid user information"));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
-    }
-
-    @PostMapping("/passchange")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<CoreResponseBody> passchange(
-            @RequestHeader("Authorization") String authHeader,
-            @RequestBody ResetPasswordRequest password) {
-        String token = this.getJwtTokenFromHeader(authHeader);
-        CoreResponseBody res = new CoreResponseBody(null, "invalid token", new Exception("invalid token"));
-        if (token == "") {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
-        }
-        User user = userService.getUserByToken(token);
-
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
-        }
-
-        if (password == null) {
-            res = new CoreResponseBody(null, "Eempty password", new Exception("No pasword given."));
-            return ResponseEntity.status(HttpStatus.OK).body(res);
-        }
-
-        User savedUser = userService.updateUserPassword(user, password.getOldPassword(), password.getPassword());
-        if (savedUser != null) {
-            res = new CoreResponseBody(savedUser, "Password changed", null);
-        } else {
-            res = new CoreResponseBody(null, "Current password is invalid, password change failed.", new Exception("Current password is invalid, password change failed."));
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(res);
-    }
 
     private String getJwtTokenFromHeader(String authHeader) {
         return authHeader.replace("Bearer ", "").trim();
