@@ -1,9 +1,6 @@
 package com.ucareer.builder.user.web;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ucareer.builder.core.CoreResponseBody;
-import com.ucareer.builder.landing.repos.GalleryRepository;
-import com.ucareer.builder.landing.repos.HeadRepository;
 import com.ucareer.builder.mail.MailService;
 import com.ucareer.builder.user.User;
 import com.ucareer.builder.user.UserRepository;
@@ -26,15 +23,6 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
-
-//    @Autowired
-//    BuilderRepository builderRepository;
-
-    @Autowired
-    GalleryRepository galleryRepository;
-
-    @Autowired
-    HeadRepository headRepository;
 
     //localhsot:8080/api/hello
     @GetMapping("/hello")
