@@ -1,5 +1,4 @@
 package com.ucareer.builder.user;
-
 import com.ucareer.builder.user.enums.UserStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Service("UserService")
 public class UserService {
 
+
     @Autowired
     UserRepository repository;
 
@@ -38,6 +38,9 @@ public class UserService {
         encoder = new BCryptPasswordEncoder();
     }
 
+
+
+
     private String generateEncodedSecret(String plainSecret) {
         if (StringUtils.isEmpty(plainSecret)) {
             throw new IllegalArgumentException("JWT secret cannot be null or empty.");
@@ -48,21 +51,33 @@ public class UserService {
     }
 
     public User register(User user) {
-        // avoid user id duplicate
-        User foundUser = repository.findByUsername(user.getUsername()).orElse(null);
-
-        if (foundUser == null) {
-            //create new user
+        User oldUser = repository.findByUsername(user.getUsername()).orElse(null);
+        if(oldUser == null){
             User newUser = new User();
-            newUser.setPassword(encoder.encode(user.getPassword()));
             newUser.setUsername(user.getUsername());
-            newUser.setStatus(UserStatus.Active);
-
+            newUser.setPassword(user.getPassword());
             User savedUser = repository.save(newUser);
-            return savedUser;
-        } else {
+            return  savedUser;
+        }else{
             return null;
         }
+
+
+//        // avoid user id duplicate
+//        User foundUser = repository.findByUsername(user.getUsername()).orElse(null);
+//
+//        if (foundUser == null) {
+//            //create new user
+//            User newUser = new User();
+//            newUser.setPassword(encoder.encode(user.getPassword()));
+//            newUser.setUsername(user.getUsername());
+//            newUser.setStatus(UserStatus.Active);
+//
+//            User savedUser = repository.save(newUser);
+//            return savedUser;
+//        } else {
+//            return null;
+//        }
     }
 
     public String login(User user) {

@@ -16,7 +16,7 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
+@Table(name = "old_users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
                 "username"
         })
@@ -27,21 +27,26 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
+
     @NotBlank
     private String username;
+
 
     @NotBlank
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+
     @Temporal(TIMESTAMP)
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created", nullable = false)
     @CreatedDate
     @CreationTimestamp
     private Date createdAt;
+
 
     @Temporal(TIMESTAMP)
     @Column(name = "modified_at", nullable = false, columnDefinition = "TIMESTAMP  default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
@@ -53,8 +58,8 @@ public class User {
 //    @JoinColumn(name = "landing_id")
 //    @JsonIgnore
 //    private Landing landing;
-
     private String firstName;
+
     private String lastName;
     private String phone;
     private String address;
