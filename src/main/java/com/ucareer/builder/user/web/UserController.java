@@ -45,7 +45,7 @@ public class UserController {
     }
 
 
-    
+
     @PostMapping("/login")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CoreResponseBody> login(@RequestBody User user)
