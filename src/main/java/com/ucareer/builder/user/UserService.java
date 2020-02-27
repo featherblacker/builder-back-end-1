@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Service("UserService")
 public class UserService {
 
+    //    auto new
     @Autowired
     UserRepository repository;
 
@@ -52,10 +53,9 @@ public class UserService {
         User foundUser = repository.findByUsername(user.getUsername()).orElse(null);
 
         if (foundUser == null) {
-            //create new user
             User newUser = new User();
-            newUser.setPassword(encoder.encode(user.getPassword()));
             newUser.setUsername(user.getUsername());
+            newUser.setPassword(encoder.encode(user.getPassword()));
             newUser.setStatus(UserStatus.Active);
 
             User savedUser = repository.save(newUser);

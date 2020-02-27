@@ -2,6 +2,9 @@ package com.ucareer.builder.user.web;
 
 import com.ucareer.builder.core.CoreResponseBody;
 import com.ucareer.builder.user.User;
+import com.ucareer.builder.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class UserController {
 
+    @Autowired
+    UserService userService;
 
     @GetMapping("/hello")
     @CrossOrigin("http://localhost:4200")
@@ -20,19 +25,34 @@ public class UserController {
     @PostMapping("/register")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CoreResponseBody> register(@RequestBody User user) {
-        return ResponseEntity.ok(null);
+        User savedUser = userService.register(user);
+        CoreResponseBody res;
+        if (savedUser == null) {
+            res = new CoreResponseBody(savedUser, "already exist", new Exception("already exist"));
+        } else {
+            res = new CoreResponseBody(savedUser, "created success", null);
+        }
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/user/confirm/{token}")
     @CrossOrigin(origins = "http://localhsot:4200")
     public ResponseEntity<CoreResponseBody> confirmMail(@PathVariable String token) {
+
         return ResponseEntity.ok(null);
     }
 
     @PostMapping("/login")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<CoreResponseBody> login(@RequestBody User user) {
-        return ResponseEntity.ok(null);
+        String loginStatus = userService.login(user);
+        CoreResponseBody token;
+        if (loginStatus != null) {
+            token = new CoreResponseBody(loginStatus, "login success", null);
+        } else {
+            token = new CoreResponseBody(loginStatus, "login failed", new Exception("username or password is wrong!"));
+        }
+        return ResponseEntity.ok(token);
     }
 
 
