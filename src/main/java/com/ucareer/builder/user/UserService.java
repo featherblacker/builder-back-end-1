@@ -1,4 +1,5 @@
 package com.ucareer.builder.user;
+
 import com.ucareer.builder.user.enums.UserStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -39,8 +40,6 @@ public class UserService {
     }
 
 
-
-
     private String generateEncodedSecret(String plainSecret) {
         if (StringUtils.isEmpty(plainSecret)) {
             throw new IllegalArgumentException("JWT secret cannot be null or empty.");
@@ -50,15 +49,33 @@ public class UserService {
                 .encodeToString(this.plainSecret.getBytes());
     }
 
+
+    public User updateProfile(User rawUser, User newUser) {
+        if (newUser.getFirstName() != null) {
+            rawUser.setFirstName(newUser.getFirstName());
+        }
+        if (newUser.getLastName() != null) {
+            rawUser.setLastName(newUser.getLastName());
+        }
+        return repository.save(rawUser);
+    }
+
+    public User getMyProfile(String token) {
+        return this.getUserByToken(token);
+    }
+
+
     public User register(User user) {
         User oldUser = repository.findByUsername(user.getUsername()).orElse(null);
-        if(oldUser == null){
+        if (oldUser == null) {
             User newUser = new User();
             newUser.setUsername(user.getUsername());
-            newUser.setPassword(user.getPassword());
+            newUser.setPassword(encoder.encode(user.getPassword()));
+            newUser.setStatus(UserStatus.Active);
             User savedUser = repository.save(newUser);
-            return  savedUser;
-        }else{
+
+            return savedUser;
+        } else {
             return null;
         }
 
@@ -80,16 +97,37 @@ public class UserService {
 //        }
     }
 
-    public String login(User user) {
 
-        User loginUser = (User) repository.findByUsername(user.getUsername()).orElse(null);
-
-        if (loginUser != null) {
-            return encoder.matches(user.getPassword(), loginUser.getPassword()) ?
-                    createToken(loginUser) : null;
-        } else {
+    public String forgot(User user) {
+        User loginUser = repository.findByUsername(user.getUsername()).orElse(null);
+        if (loginUser == null) {
             return null;
+        } else {
+            return this.createToken(loginUser);
         }
+    }
+
+    public String login(User user) {
+        User loginUser = repository.findByUsername(user.getUsername()).orElse(null);
+        if (loginUser == null) {
+            return null;
+        } else {
+            boolean pass = this.encoder.matches(user.getPassword(), loginUser.getPassword());
+            if (pass) {
+                return this.createToken(loginUser);
+            } else {
+                return null;
+            }
+
+        }
+//        User loginUser = (User) repository.findByUsername(user.getUsername()).orElse(null);
+//
+//        if (loginUser != null) {
+//            return encoder.matches(user.getPassword(), loginUser.getPassword()) ?
+//                    createToken(loginUser) : null;
+//        } else {
+//            return null;
+//        }
     }
 
     public boolean setUserActive(User user) {
@@ -114,6 +152,19 @@ public class UserService {
                 .signWith(SignatureAlgorithm.HS512, encodedSecret)
                 .compact();
     }
+
+
+    public boolean resetPassword(String token, String newPassword) {
+        User foundUser = this.getUserByToken(token);
+        if (foundUser == null) {
+            return false;
+        } else {
+            foundUser.setPassword(encoder.encode(newPassword));
+            repository.save(foundUser);
+            return true;
+        }
+    }
+
 
     public User getUserByToken(String token) {
         try {
