@@ -36,16 +36,16 @@ public class UserController {
     @Autowired
     HeadRepository headRepository;
 
-    //localhsot:8080/api/hello
+    //localhost:3000/api/hello
     @GetMapping("/hello")
-    @CrossOrigin("http://localhost:4200")
+    @CrossOrigin("http://localhost:3000")
     public ResponseEntity<String> hello() {
         return ResponseEntity.ok("hello world");
     }
 
-    //localhsot:8080/api/register
+    //localhost:3000/api/register
     @PostMapping("/register")
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CoreResponseBody> register(@RequestBody User user) {
         //call user service to insert user
         User savedUser = userService.register(user);
@@ -58,7 +58,7 @@ public class UserController {
 //                String token = userService.createToken(savedUser);
 //                String body = String.format(
 //                        "please click following link to confirm your username. <a href=\"%s/api/user/confirm/%s\">Email Confirmed</a>",
-//                        "http://localhost:8080", token);
+//                        "http://localhost:3000", token);
 //                this.mailService.sendSimpleMessage(savedUser.getUsername(), "Please confirm your email!", body);
 //            } catch (MailException e) {
 //                res = new CoreResponseBody(null, "email send failed", e);
@@ -70,7 +70,7 @@ public class UserController {
     }
 
     @GetMapping("/user/confirm/{token}")
-    @CrossOrigin(origins = "http://localhsot:4200")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CoreResponseBody> confirmMail(@PathVariable String token) {
         // validate token to see if it matches with a user who's currently inactive
         try {
@@ -93,8 +93,8 @@ public class UserController {
 
     //write login api, return token
     @PostMapping("/login")
-    //give peremission for port 4200 to access this port
-    @CrossOrigin(origins = "http://localhost:4200")
+    //give permission for port 4200 to access this port
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CoreResponseBody> login(@RequestBody User user) {
         CoreResponseBody res;
 
@@ -117,7 +117,7 @@ public class UserController {
 
     // go to profile page
     @GetMapping("/me")
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CoreResponseBody> me(@RequestHeader("Authorization") String authHeader) {
         String token = this.getJwtTokenFromHeader(authHeader);
         CoreResponseBody res;
@@ -138,7 +138,7 @@ public class UserController {
 
     // update user profile
     @PostMapping("/me")
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:3000")
 
     public ResponseEntity<CoreResponseBody> me(
             @RequestHeader("Authorization") String authHeader,
@@ -168,7 +168,7 @@ public class UserController {
     }
 
     @PostMapping("/passchange")
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<CoreResponseBody> passchange(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody ResetPasswordRequest password) {
