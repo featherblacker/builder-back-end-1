@@ -106,6 +106,7 @@ public class UserController {
 
         //get token use method in service
         String loginToken = userService.login(user);
+        System.out.println(loginToken);
         if (loginToken == null) {
             res = new CoreResponseBody(null, "Username or password does not match with the record.", null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
@@ -122,7 +123,7 @@ public class UserController {
         String token = this.getJwtTokenFromHeader(authHeader);
         CoreResponseBody res;
         if (token == "") {
-            res = new CoreResponseBody(null, "invalid token", new Exception("invalid token"));
+            res = new CoreResponseBody(null, "no token", new Exception("no token"));
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
         }
 
@@ -147,12 +148,12 @@ public class UserController {
         String token = this.getJwtTokenFromHeader(authHeader);
         CoreResponseBody res;
         if (token == "") {
-            res = new CoreResponseBody(null, "invalid token", new Exception("invalid token"));
+            res = new CoreResponseBody(null, "no token", new Exception("no token"));
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
         }
 
         User currUser = userService.getUserByToken(token);
-        if (user == null) {
+        if (currUser == null) {
             res = new CoreResponseBody(null, "invalid token", new Exception("invalid token"));
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
         }
@@ -184,7 +185,7 @@ public class UserController {
         }
 
         if (password == null) {
-            res = new CoreResponseBody(null, "Eempty password", new Exception("No pasword given."));
+            res = new CoreResponseBody(null, "Empty password", new Exception("No pasword given."));
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }
 
@@ -198,7 +199,9 @@ public class UserController {
     }
 
     private String getJwtTokenFromHeader(String authHeader) {
-        return authHeader.replace("Bearer ", "").trim();
+        authHeader = authHeader.replace("Bearer ", "").trim();
+        authHeader = authHeader.replace("\"", "").trim();
+        return authHeader.replace("Bear ", "").trim();
     }
 
 

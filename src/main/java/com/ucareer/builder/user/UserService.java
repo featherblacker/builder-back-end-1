@@ -106,7 +106,6 @@ public class UserService {
                     .setSigningKey(encodedSecret)
                     .parseClaimsJws(token)
                     .getBody();
-
             String username = claims.getSubject();
             User user = repository.findByUsername(username).orElse(null);
             if (user != null) return user;
@@ -119,10 +118,11 @@ public class UserService {
 
     public User updateUser(User userInDb, User newUser) {
 
+        userInDb.setAddress(newUser.getAddress());
+        userInDb.setFirstName(newUser.getFirstName());
+        userInDb.setLastName(newUser.getLastName());
 
-        User savedUser = repository.save(userInDb);
-
-        return savedUser;
+        return repository.save(userInDb);
     }
 
     public User updateUserPassword(User userInDb, String oldPass, String newPass) {
